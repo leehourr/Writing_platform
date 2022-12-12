@@ -1,0 +1,511 @@
+﻿@model IEnumerable<Writing_platform.Models.work>
+@using Writing_platform.Models;
+
+@{
+    Authenthication auth = new Authenthication();
+    ViewBag.Title = "Home Page";
+    string name = ViewBag.name;
+    string email = ViewBag.email;
+    string password = ViewBag.pass;
+    int id = ViewBag.Id;
+    string at = "@";
+}
+
+<div class="homepage relative h-full w-full">
+    <div class="nav sticky duration-500 east-in transition-all  w-full bg-zinc-800 outline-b-[1px] border-b-[1px] border-b-cyan-600/60 z-10  top-0 translate-y-0 sm:w-1/2 flex justify-between mx-auto text-cyan-500 px-2 pt-2 sm:pt-4">
+        <button onclick="toggleOverlay()" class="w-[15px] sticky z-10 sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px]"><img src="~/assets/icon/menu.svg" /></button>
+        <h2 class="w-full sticky z-10 text-center mt-[1px] sm:mt-0 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  text-xs sm:text-2xl font-bold ">WRITING PLATFORM</h2>
+        <button class="w-[15px] sticky z-10 sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px]"><span class=""></span></button>
+    </div>
+
+    <div class="relative search sm:my-[6px] w-48 sm:w-1/2 mx-auto text-center">
+        <input class="w-full mx-auto pl-4 sm:pl-6 nm-inset-zinc-800 text-[6px] caret-cyan-500 focus:outline-none border-b-[1px] sm:border-b-[2px] border-b-transparent focus:border-b-[1px] sm:focus:border-b-[2px] focus:border-b-cyan-500 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-xl" type="text" placeholder="Search title, author, genre" required />
+    </div>
+
+    <div class="relative postUrW w-[6.3rem] sm:w-[7.5rem] font-semibold text-[7px] mt-[6px] sm:text-[8px] mx-auto ">
+        <button onclick="postWork()" class="w-full bg-cyan-600  py-[1px] sm:py-[2px] nm-flat-zinc-800 rounded-lg ">
+            <span class="text-s">+</span> Post your work
+        </button>
+    </div>
+
+    <div class="w-48 genre bg-zinc-800 sticky sm:w-1/2 text-[7px] sm:text-[8px] text-center mx-auto mt-2 sm:mt-4 ">
+        <p class="font-semibold my-2 sm:my-4">Top 50 works by: </p>
+        <div class=" flex items-center justify-between sm:justify-center  ">
+            <button class=" py-[1px] sm:py-[2px] px-[7px] sm:px-6 nm-flat-zinc-800 rounded-xl sm:mx-2 ">
+                Genre
+            </button>
+            <button class="  py-[1px] sm:py-[2px] px-[7px] sm:px-6 nm-flat-zinc-800 rounded-xl sm:mx-2">
+                Rates
+            </button>
+            <button class=" py-[1px] sm:py-[2px] px-[7px] sm:px-6 nm-flat-zinc-800 rounded-xl sm:mx-2">
+                Comments
+            </button>
+        </div>
+    </div>
+
+    <div class="work h-full w-48 sm:w-1/2 mx-auto text-[6px] sm:text-xs my-4">
+        <div class=" divide-y divide-zinc-500 nm-flat-zinc-800 rounded-lg mb-4 overflow-hidden">
+            @foreach (var c in Model)
+            {
+                <div class="w-full h-18 py-2 sm:h-24  overflow-hidden text-center text-cyan-500 text-xs sm:text-lg ">
+                    <h2 class="font-bold underline underline-offset-[1px] ">@c.title</h2>
+                    <div class="flex flex-col justify-center text-[5px] sm:text-xs mt-2">
+                        <div class="flex justify-center">
+                            <p>Author: </p>
+                            <p class="text-white font-semibold ml-1">@c.user_name </p>
+                        </div>
+                        <div class="flex justify-center">
+                            <p>Publish date: </p>
+                            <p class="text-white font-semibold ml-1">@c.dop.Value.ToShortDateString() </p>
+                        </div>
+                    </div>
+                    <p id="goto-content"  class="cursor-pointer w-1/3 mx-auto text-[5px] sm:text-xs text-cyan-500">
+                      @Html.ActionLink("Read more","Details", new {id=id, story_id=c.id,name=name})
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <div id="slideover-container" class=" z-50 w-full h-full fixed inset-0 invisible">
+        <div onclick="" id="slideover" class="w-full bg-zinc-800 h-full flex flex-col justify-between absolute left-0 duration-300 ease-out transition-all -translate-x-full">
+            <div class="menu w-48 sm:w-1/2 flex flex-col duration-500 ease-out transition-all justify-between mx-auto text-cyan-500 mt-2 sm:mt-4 border-b-[1px] border-b-cyan-600">
+                <button onclick="toggleOverlay()" class="w-[15px] sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px]"><img class="" src="~/assets/icon/cross.svg" /></button>
+                <button onclick="gotoProfile()" class="w-12 h-12 sm:w-24 sm:h-24 self-center p-1 rounded-[50%] pb-[4px]"><img class="" src="~/assets/icon/user2.svg" /></button>
+                <h2 class=" self-center mt-1 text-white  text-xs sm:text-lg font-bold ">@name</h2>
+            </div>
+            <button onclick="toggleBackdrop()" class="logoutBtn w-1/3 sm:w-1/5 mb-4 sm:mb-6 font-semibold mx-auto bg-cyan-600 text-[7px] sm:text-lg  py-[1px] sm:py-[2px] nm-flat-zinc-800 rounded-xl ">
+                Log out
+            </button>
+            <div id="backdrop" class="cursor-pointer w-full h-full fixed inset-0 invisible">
+                <div onclick="toggleBackdrop()" id="bg" class="cursor-pointer z-10 absolute w-full h-full bg-black/60 duration-500 ease-out transition-all opacity-0"></div>
+                <div onclick="" id="overlay" class="cursor-default divide-y divide-zinc-500 flex flex-col items-center justify-around absolute z-50 w-[90%] sm:w-[35%] h-[5rem] sm:h-[8.5rem] bg-zinc-800 rounded-lg text-center text-[6px] sm:text-xs left-[50%] top-[53%] sm:top-[70%] -translate-x-[50%] translate-y-[90%] sm:-translate-y-0 duration-300 ease-out transition-all top-full translate-y-full">
+                    <div class=" w-full">
+                        <p id="" class="px-2 mb-2 sm:mt-4 ">Are you sure you want to log out?</p>
+                        <button id="btnLogout" class="errr text-red-600 rounded-lg text-red-400 px-2 sm:py-1 sm:mt-4 hidden" onclick="logoutHandler()">Log out</button>
+                    </div>
+                    <div class="w-full">
+                        <button class="errr mt-2 text-red-600 rounded-lg text-cyan-600 px-2 sm:py-1 hidden" onclick="toggleBackdrop()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile" class="overflow-y-scroll w-full h-full absolute duration-300 ease-out transition-all left-0 -translate-x-full invisible">
+            <div class="profileHeader w-48 sm:w-1/2 flex flex-col mx-auto mt-2 sm:mt-4">
+                <div class="w-full flex items-center justify-between">
+                    <button onclick="gotoProfile()" class="w-[15px] sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px] text-cyan-600"><img src="~/assets/icon/back.svg" /></button>
+                    <button onclick="editHandler()" class="w-[15px] sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px] text-cyan-600"><img src="~/assets/icon/edit-246.svg" /></button>
+                </div>
+                <img class="w-12 h-12 sm:w-24 sm:h-24 self-center p-1 rounded-[50%] object-bottom object-cover nm-flat-zinc-800 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 stroke-white" src="~/assets/icon/user.svg" />
+                <h2 class="self-center  w-1/3 sm:w-1/5 mx-auto text-center mt-3 text-white  text-xs sm:text-lg font-bold ">@ViewBag.name</h2>
+                <h3 class="w-[100%] text-left text-center pt-2 my-2 text-white text-[7px] sm:text-lg font-semibold">Publishes:</h3>
+            </div>
+
+            <div class="editForm absolute w-48 sm:w-1/2   mx-auto pt-2 sm:pt-4 top-0 left-1/2 -translate-x-1/2 bg-zinc-800 rounded-none duration-100 ease-in transition-all overflow-hidden hidden">
+                <button onclick="editHandler()" class="w-[15px] block ml-auto sm:pr-2 sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px]"><img class="" src="~/assets/icon/cross.svg" /></button>
+                @using (Html.BeginForm("Update", "users", FormMethod.Post, new { id = "form-submit", enctype = "multipart/form-data" }))
+                {<div class="flex flex-col items-center justify-center mt-8 sm:mt-16 ">
+                        <h2 class=" w-full text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  text-xs sm:text-lg font-bold ">EDIT PROFILE</h2>
+                        <div class="relative self-center mb-1">
+                            <img class="absolute top-4 left-2 w-[8px] h-[8px] fill-[#9ca3a2] " src="~/assets/icon/user.svg" />
+                            <input value="@name" class="uName w-[8.6rem] sm:w-[11.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-lg" type="text" placeholder="Name" id="name" name="name" required />
+                        </div>
+                        <div class="relative self-center mb-1">
+                            <img class="absolute top-4 left-2 w-[8px] h-[8px] fill-[#9ca3a2] " src="~/assets/icon/user.svg" />
+                            <input value="@email" class="uEmail w-[8.6rem] sm:w-[11.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-lg" type="text" placeholder="Name" id="email" name="email" required />
+                            <p id="uemail" class="hidden h-0">Invalid email format.</p>
+                        </div>
+                        <div class="relative self-center mb-1">
+                            <img class=" absolute top-4 left-2 w-[8px] h-[8px] " src="~/assets/icon/password.svg" />
+                            <input value="" class="uPass w-[8.6rem] sm:w-[11.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800 px-4 py-1 rounded-lg" type="password" placeholder="New password" id="pass" name="password" required />
+                            <p id="upass" class="hidden h-0">must be 5 characters or longer</p>
+                        </div>
+                        <div class="font-semibold text-[6px] flex flex-col items-center justify-center sm:text-xs text-center mt-2.5 ">
+                            <button id="btnSubmit" type="submit" class="overflow-hidden w-[8.6rem] h-[1.4rem] sm:h-[1.6rem] bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 sm:w-[11.5rem] py-[2px] nm-flat-zinc-800 rounded-xl ">
+                                <p id="btnP">Update</p>
+                                <img id="btnImg" class="animate-spin w-[1rem] h-[1rem] rounded-[50%]  sm:w-[1.2rem] sm:h-[1.2rem] mx-auto hidden h-0" src="~/assets/icon/loader.svg" />
+                            </button>
+                        </div>
+                    </div>
+                }
+
+                <div id="updateBackdrop" class="cursor-pointer w-full h-full absolute inset-0 invisible">
+                    <div onclick="toggleUpdate()" id="bgUpdate" class="cursor-pointer z-10 absolute w-full h-full bg-black/60 duration-300 ease-out transition-all opacity-0"></div>
+                    <div onclick="" id="overlayUpdate" class="cursor-default divide-y divide-zinc-500 flex flex-col items-center justify-around absolute z-50 w-[95%] sm:w-[40%] h-[7rem] sm:h-[10rem] bg-zinc-800 rounded-lg text-center text-[6px] sm:text-xs left-[50%] top-[10%] sm:top-[70%] -translate-x-[50%] translate-y-[90%] sm:-translate-y-0 duration-300 ease-out transition-all hidden">
+                        <div class=" w-full">
+                            <p id="message" class="px-2 sm:mt-4 "></p>
+                        </div>
+                        <div class="w-full">
+                            <button class="update mt-2 text-red-600 rounded-lg text-cyan-600 px-2 sm:py-1" onclick="toggleUpdate()">Okay</button>
+                        </div>
+                    </div>
+                </div>
+                <span onclick="toggleDelete()" class="cursor-pointer hover:text-red-600 active:text-red-600 block text-[6px] sm:text-xs text-center mx-auto underline decoration-[1px] w-[8.6rem] mx-auto sm:w-[11.5rem] mt-[4px]">Delete account</span>
+
+                <div id="deleteBackdrop" class="cursor-pointer w-full h-full absolute inset-0 invisible">
+                    <div onclick="toggleDelete()" id="bgDelete" class="cursor-pointer z-10 absolute w-full h-full bg-black/60 duration-300 ease-out transition-all opacity-0"></div>
+                    <div onclick="" id="overlayDelete" class="cursor-default divide-y divide-zinc-500 flex flex-col items-center justify-around absolute z-50 w-[95%] sm:w-[40%] h-[7rem] sm:h-[10rem] bg-zinc-800 rounded-lg text-center text-[6px] sm:text-xs left-[50%] top-[20%] sm:top-[70%] -translate-x-[50%] translate-y-[90%] sm:-translate-y-0 duration-300 ease-out transition-all hidden">
+                        <div class=" w-full">
+                            <p id="" class="px-2 mt-2 sm:mt-4 ">All your contents and interactions will remain on the plateform</p>
+                            <button id="btnDelete" onclick="deleteAccount()" class="text-red-600 rounded-lg text-red-400 px-2 sm:py-1 mt-4 sm:mt-4" onclick="">
+                                Delete
+                            </button>
+                        </div>
+                        <div class="w-full">
+                            <button class="text-red-600 rounded-lg text-cyan-600 px-2 mt-1 sm:py-1" onclick="toggleDelete()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="author-works h-full w-48 sm:w-7/12 mx-auto text-[6px] sm:text-xs my-4  ">
+                <div class=" divide-y divide-zinc-500 nm-flat-zinc-800 rounded-lg mb-4 ">
+                    @foreach (var c in Model)
+                    {
+                        if (c.uid == id)
+                        {
+                            <div class="w-full h-18 py-2 sm:h-24  overflow-hidden text-center text-cyan-500 text-xs sm:text-lg ">
+                                <h2 class="font-bold underline underline-offset-[1px] ">@c.title</h2>
+                                <div class="flex justify-center text-[5px] sm:text-xs mt-2">
+                                    <p>Publish date: </p>
+                                    <p class="text-white font-semibold ml-1">@c.dop.Value.ToShortDateString() </p>
+                                </div>
+                                <p class="cursor-pointer w-1/3 mx-auto text-[5px] sm:text-xs text-cyan-500">Read more</p>
+                            </div>
+                        }
+                        if(c.uid == id && c.story == null)
+                        {
+                            <div class="w-full h-18 py-2 sm:h-24  overflow-hidden text-center text-cyan-500 text-xs sm:text-lg ">
+                                <h2 class="font-bold underline-offset-[1px] ">No contents</h2>
+                            </div>
+                            break;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("Upload", "works", FormMethod.Post, new { id = "work-submit", enctype = "multipart/form-data" }))
+    {
+        <div id="post-work" class="absolute  bg-zinc-800 z-100 text-white w-full h-full top-0  left-0 hidden">
+
+            <div class="flex flex-col items-center w-48 sm:w-7/12 mx-auto h-full  mt-2 sm:mt-2">
+
+                <div class="flex w-full relative">
+                    <h2 class="mb-2 self-center sm:mb-4 w-full text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  text-xs sm:text-lg font-bold ">Write your story here</h2>
+                    <button onclick="postWork()" class="absolute right-0  sm:right-2 w-[15px] block sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px]"><img class="" src="~/assets/icon/cross.svg" /></button>
+                </div>
+
+                <input id="title" class="uName mb-2 sm:mb-4 w-[8.6rem] sm:w-[11.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-lg" type="text" placeholder="Title" name="name" required />
+                <input id="genre" class="uName mb-2 sm:mb-4 w-[8.6rem] sm:w-[20.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-lg" type="text" placeholder="Genre" name="name" required />
+                <textarea id="story" class="w-48 text-xs sm:text-lg px-2 py-2 focus:outline-none sm:w-7/12 h-[80%] nm-inset-zinc-800 rounded-lg" placeholder=""></textarea>
+                <button id="btnSubmit" type="submit" class="overflow-hidden text-[7px] sm:text-xs w-[4.6rem] h-[1.4rem] sm:h-[1.6rem] bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 sm:w-[6.5rem] py-[2px] my-2 sm:my-4 nm-flat-zinc-800 rounded-xl ">
+                    Upload
+                </button>
+            </div>
+        </div>
+    }
+
+
+
+</div>
+
+
+
+@section scripts{
+    <script type="text/javascript">
+        const overlayBtn = $(".errr");
+        const homepage = $(".homepage")
+        const work = $(".work")
+        const nav = $(".nav");
+        const message = $('#message');
+
+        const profile = $("#profile");
+        const editform = $(".editForm")
+        const profileHeader = $(".profileHeader");
+        const authorWork = $(".author-works")
+        let name = "";
+        let email = "";
+
+        let pass = "";
+
+@*        function openContent(e) {
+            work.toggleClass("invisible");
+            $('#slide-content').toggleClass('invisible');
+            $('#content').toggleClass('right-0');
+            $('#content').toggleClass('translate-x-full');
+            overlayBtn.toggleClass('hidden');
+        }*@
+
+@*        $(function () {
+            $('#goto-content').on("click", async function (e) {
+                e.preventDefault();
+                console.log("sth");
+                const id = '@id';
+                const stroy_id = $(".story-id").val();
+                console.log(story_id);
+                const req = { uid: id , stroy_id}
+                if (validateLogin() === true) {
+                    $.ajax({
+                        url: "/works/Details/",
+                        type: this.method,
+                        data: JSON.stringify(req),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.statCode === 401) {
+
+                            }
+                            if (data.statCode === 200) {
+                                console.log(data);
+                            }
+                        }
+                    });
+                }
+            })
+        });
+*@
+       $(function () {
+            var isValid = false;
+            $('#work-submit').on("submit", async function (e) {
+                e.preventDefault();
+                console.log(email);
+                const title  = $("#title").val();
+                const genre  = $("#genre").val();
+                const story = $("#story").val();
+                const date = new Date();
+                const id = '@id';
+                const dop = date.toLocaleDateString();
+                const req = {uid:'@id',username:"@name",title, genre, story, dop }
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: JSON.stringify(req),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.statCode === 401) {
+
+                            }
+                            if (data.statCode === 200) {
+                                console.log(data);
+                                window.location.replace(`https://localhost:44323/works/Index?id=${id}`);
+                            }
+                        }
+                    });
+
+            })
+        });
+
+
+        function postWork() {
+            nav.toggleClass("hidden");
+            $('#post-work').toggleClass("hidden");
+            $('.search').toggleClass("hidden");
+            $('.postUrW').toggleClass("hidden");
+            $('.genre').toggleClass("hidden");
+            work.toggleClass("hidden");
+        }
+        function logoutHandler() {
+            $.ajax({
+                url: "/users/Logout/",
+                type: "GET",
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    window.location.replace("https://localhost:44323/users/Login");
+                }
+            })
+        }
+
+        function deleteAccount () {
+            const id = { id: '@id' };
+            console.log("triggered");
+            $.ajax({
+               url: "/works/DeleteAccount/",
+                type: "POST",
+                data: JSON.stringify(id),
+               dataType: 'json',
+               contentType: 'application/json; charset=utf-8',
+               success: function (data) {
+                   console.log(data);
+                   if (data.statCode === 301) {
+                       window.location.replace(`https://localhost:44323/${data.redirect}`)
+                   }
+               }
+           })
+        }
+
+        $(function () {
+            var isValid = false;
+            $('#form-submit').on("submit", async function (e) {
+                e.preventDefault();
+                console.log(email);
+                ($("#name").val() == "") ? name = "@name" : name = $("#name").val();
+                ($("#email").val() == "") ? email = "@email" : email = $("#email").val();
+                ($("#pass").val() == "") ? pass ="@password" : pass = $("#pass").val();
+                const req = { id: '@id', name, email, pass }
+                const id = '@id';
+                if (validateLogin() === true) {
+                    $.ajax({
+                        url: this.action,
+                        type: this.method,
+                        data: JSON.stringify(req),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data.status_code === 401) {
+                                message.html(data.message);
+                                console.log(data.message)
+                                toggleUpdate();
+                            }
+                            if (data.status_code === 200) {
+                                message.html(data.message);
+                                console.log(data)
+                                toggleUpdate();
+                                window.location.replace(`https://localhost:44323/works/Index?id=${id}`);
+                                console.log(data);
+                            }
+                        }
+                    });
+                }
+            })
+        });
+
+       function validateLogin() {
+       var validEmail = validateEmail();
+       var validPass = validatePass();
+       if (validEmail && validPass) {
+           return true
+       }
+       return false;
+        }
+
+         function  validateEmail()  {
+             var inputEmail = $('.uEmail').val();
+             var isvalid_email = inputEmail.includes('@at') && inputEmail.includes('.');
+              var email = $('#uemail');
+
+             if (isvalid_email === false) {
+                 email.removeClass();
+                 email.addClass("text-red-400 text-[4px] pl-6 sm:pl-2 font-semibold sm:text-xs");
+                 return false;
+             }
+             email.removeClass();
+             email.addClass("hidden h-0");
+             return true;
+         }
+
+        function validatePass() {
+            var inputPass = $('.uPass').val();
+            var isvalid_password = inputPass.length > 5;
+            var pass = $('#upass');
+
+            if (isvalid_password === false) {
+                pass.removeClass();
+                pass.addClass("text-red-400 text-[4px] pl-6 sm:pl-2 font-semibold sm:text-xs");
+                return false;
+            }
+            pass.removeClass();
+            pass.addClass("hidden h-0");
+            return true;
+        }
+
+        function editHandler() {
+            profile.toggleClass("overflow-hidden");
+            profileHeader.toggleClass("hidden");
+            authorWork.toggleClass("hidden");
+            editform.toggleClass("hidden");
+        }
+
+        function gotoProfile() {
+            $('.menu').toggleClass("opacity-0");
+            $('.menu').toggleClass("hidden");
+            $('.logoutBtn').toggleClass("hidden");
+            $('#profile').toggleClass("invisible");
+            $('#profile').toggleClass("-translate-x-full");
+        }
+
+        function toggleBackdrop() {
+            $('#backdrop').toggleClass('invisible');
+            $('#bg').toggleClass('opacity-0');
+            $('#bg').toggleClass('opacity-50');
+            $('#bg').toggleClass('opacity-100');
+            $('#overlay').toggleClass('top-full');
+            $('#overlay').toggleClass('translate-y-full');
+        }
+
+        function toggleUpdate() {
+            editform.toggleClass('overflow-hidden');
+            $('#updateBackdrop').toggleClass('invisible');
+            $('#profile').toggleClass('bg-black/60');
+            $('#profile').toggleClass('opacity-0');
+            $('#profile').toggleClass('opacity-50');
+            $('#profile').toggleClass('opacity-100');
+            $('#bgUpdate').toggleClass('opacity-0');
+            $('#bgUpdate').toggleClass('opacity-50');
+            $('#bgUpdate').toggleClass('opacity-100');
+            $('#overlayUpdate').toggleClass('hidden');
+        }
+
+        function toggleDelete() {
+            editform.toggleClass('overflow-hidden');
+            $('#deleteBackdrop').toggleClass('invisible');
+            $('#profile').toggleClass('bg-black/60');
+            $('#profile').toggleClass('opacity-0');
+            $('#profile').toggleClass('opacity-50');
+            $('#profile').toggleClass('opacity-100');
+            $('#bgDelete').toggleClass('opacity-0');
+            $('#bgDelete').toggleClass('opacity-50');
+            $('#bgDelete').toggleClass('opacity-100');
+            $('#overlayDelete').toggleClass('hidden');
+        }
+
+        function toggleOverlay() {
+            $('body').toggleClass("overflow-y-hidden");
+            work.toggleClass("invisible");
+            $('#slideover-container').toggleClass('invisible');
+            $('#slideover').toggleClass('left-0');
+            $('#slideover').toggleClass('-translate-x-full');
+            overlayBtn.toggleClass('hidden');
+        }
+
+        var lastScroll = 0;
+
+
+        $(window).scroll(function () {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScroll && nav.hasClass("-translate-y-full")) {
+                lastScroll = currentScroll;
+            }
+
+            if (currentScroll > lastScroll) {
+                nav.removeClass("drop-shadow-lg shadow-lg shadow-[#2d3748]");
+                nav.toggleClass("-translate-y-full")
+                lastScroll = currentScroll;
+            }
+
+
+            if (currentScroll < lastScroll && nav.hasClass("-translate-y-full")) {
+                nav.toggleClass("-translate-y-full")
+                lastScroll = currentScroll;
+            }
+            if (currentScroll < lastScroll) {
+                nav.addClass("drop-shadow-lg shadow-lg shadow-[#2d3748]");
+                lastScroll = currentScroll;
+            }
+
+            if (lastScroll < 30) {
+                nav.removeClass("drop-shadow-lg shadow-lg shadow-[#2d3748]");
+            }
+        });
+
+
+
+    </script>
+
+}

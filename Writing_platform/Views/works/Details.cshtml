@@ -1,0 +1,133 @@
+﻿@model Writing_platform.Models.contentDetail
+@using System;
+@using System.Collections.Generic;
+@using Writing_platform.Models;
+
+
+@{
+    ViewBag.Title = "Details";
+    int id = ViewBag.uid;
+    int work_id = ViewBag.work_id;
+    string name = ViewBag.name;
+    var user = Model.user;
+    var work = Model.work;
+    string comment = Model.comment;
+    string spr = "";
+    string[] comment_user = comment.Split(',');
+    string[] comment_name = user.Split(',');
+    string[] arr = new string[]{ };
+    foreach (var i in comment_user)
+    {
+        spr += i+ ',';
+    }
+    var user_list = comment.ToList();
+}
+
+<div class="w-full h-full">
+    <div id="slide-content" class=" z-50 w-full h-full inset-0 ">
+        <div id="content" class="w-full bg-zinc-800 h-full duration-300 ease-out transition-all">
+            <div class="w-full py-2 text-center text-cyan-500 text-xs sm:text-lg ">
+                <div class="relative w-48 sm:w-7/12 mx-auto flex items-center justify-center">
+                    <button onclick="goback()" class=" absolute top-0 left-0 w-[15px] sm:w-[22px] h-[15px] sm:h-[22px] p-1 rounded-[50%] pb-[4px] text-cyan-600"><img src="~/assets/icon/back.svg" /></button>
+                    <h2 class="mt-2 sm:mt-4 font-bold text-lg sm:text-2xl underline-offset-[1px] ">
+                        @work.user_name
+                    </h2>
+                </div>
+                <div class="flex flex-col justify-center text-[5px] sm:text-xs mt-2">
+                    <div class="flex justify-center">
+                        <p>Author: </p>
+                        <p class="text-white font-semibold ml-1">
+                            @work.title
+                        </p>
+                    </div>
+                    <div class="flex justify-center">
+                        <p>Publish date: </p>
+                        <p class="text-white font-semibold ml-1">
+                            @work.dop.Value.ToShortDateString()
+                        </p>
+                    </div>
+                    <div class="flex justify-center">
+                        <p>Genre: </p>
+                        <p class="text-white font-semibold ml-1">
+                            @work.genre
+                        </p>
+                    </div>
+                </div>
+                <p class=" w-full mx-2 text-[8px] sm:text-lg text-white">
+                    @work.story
+                </p>
+            </div>
+            <div class="flex border-b-[1px] border-b-cyan-800  items-center justify-center w-48 sm:w-7/12 mx-auto text-center">
+                @using (Html.BeginForm("Upload", "comments", FormMethod.Post, new { id = "cmt-submit" }))
+                {
+                    <input class=" w-[8.6rem] sm:w-[11.5rem] pl-2 sm:mr-2 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-lg" type="text" placeholder="" id="comment" required />
+                    <button id="cmt" onclick="comment()" type="submit" class=" text-[7px] sm:text-xs w-[3.6rem] h-[1.4rem] sm:h-[1.6rem] bg-cyan-800 sm:w-[6.5rem] py-[2px] my-2 sm:my-4 nm-flat-zinc-800 rounded-xl ">
+                        Comment
+                    </button>
+                }
+            </div>
+            <div class="w-48 uCmt sm:w-7/12 flex flex-col justify-center text-[5px] sm:text-xs mt-2">
+                <div class="flex flex ml-4  sm:ml-64">
+                    <div class="flex flex-col">
+                        @foreach (var i in comment_name)
+                        {
+                            <p class="text-cyan-600 text-left">@i </p>
+                        }
+                    </div>
+                    <div class="flex flex-col">
+                        @foreach (var i in comment_user)
+                        {
+                            <p class="cmt-txt text-white font-semibold ml-1"> @i</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        console.log('@comment')
+        $(function () {
+            $('#cmt-submit').on("submit", async function (e) {
+                e.preventDefault();
+                const cmt = $("#comment").val();
+                const id = '@id';
+                const wid = '@work_id';
+                const req = {wid, id,  cmt }
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: JSON.stringify(req),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.statCode === 401) {
+
+                        }
+                        if (data.statCode === 200) {
+                            console.log(data);
+                        }
+                    }
+                });
+            });
+        });
+
+        function comment() {
+            const cmt = $("#comment").val();
+            $('.uCmt').append(`<div class="flex flex ml-4 sm:ml-56">
+                                     <p class="text-cyan-600 text-left">@name</p>
+                                     <p class="cmt-txt text-white font-semibold ml-1">${cmt}</p>
+                                </div>`);
+            console.log(cmt);
+        }
+
+        function goback() {
+            const id ='@id'
+            window.location.href = `https://localhost:44323/works/index/?id=${id}`;
+        }
+
+
+    </script>
+}

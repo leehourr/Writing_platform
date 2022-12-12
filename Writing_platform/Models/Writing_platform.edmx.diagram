@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3cd5b28b4c6b47bb810e57e0a3ba3818" Name="Diagram1" ZoomLevel="109">
+        <EntityTypeShape EntityType="WritingPlatformModel.comment" Width="1.5" PointX="6.375" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WritingPlatformModel.rate" Width="1.5" PointX="6.375" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WritingPlatformModel.sysdiagram" Width="1.5" PointX="9.125" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WritingPlatformModel.user" Width="1.5" PointX="0.5" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WritingPlatformModel.work" Width="1.5" PointX="3.375" PointY="3" IsExpanded="true" />
+        <AssociationConnector Association="WritingPlatformModel.FK_comments_comments" ManuallyRouted="false" />
+        <AssociationConnector Association="WritingPlatformModel.FK_comments_users" ManuallyRouted="false" />
+        <AssociationConnector Association="WritingPlatformModel.FK_rates_users" ManuallyRouted="false" />
+        <AssociationConnector Association="WritingPlatformModel.FK_rates_works" ManuallyRouted="false" />
+        <AssociationConnector Association="WritingPlatformModel.FK_works_users" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

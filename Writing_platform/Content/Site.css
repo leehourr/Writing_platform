@@ -1,0 +1,72 @@
+﻿body {
+    background: #27272a;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+.scroll-down {
+
+    transform: translate3d(0, -100%, 0);
+}
+
+.scroll-up{
+    filter: drop-shadow(0 -10px 20px rgb(170, 170, 170));
+
+}
+
+.menu-is-open {
+    overflow: hidden;
+}
+
+.menu-is-open>.nav {
+    filter: none;
+}
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.slide-up {
+    position: absolute;
+    top:100%;
+    height:0;
+    width:0;
+    visibility:hidden;
+    transition: 2s;
+}
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.text-redd {
+    color: red;
+}
+.nm-flat-zinc-800 {
+    background: #27272A;
+    box-shadow: 0.2em 0.2em calc(0.2em * 2) #1B1B1D, calc(0.2em * -1) calc(0.2em * -1) calc(0.2em * 2) #313135;
+}
+button:hover, button:active {
+    background: #27272A;
+    box-shadow: inset 0.2em 0.2em calc(0.2em * 2) #1B1B1D, inset calc(0.2em * -1) calc(0.2em * -1) calc(0.2em * 2) #313135;
+}
+
+.nm-inset-zinc-800 {
+    background: #27272A;
+    box-shadow: inset 0.2em 0.2em calc(0.2em * 2) #1B1B1D, inset calc(0.2em * -1) calc(0.2em * -1) calc(0.2em * 2) #313135;
+}
+
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+    background-color: #777;
+    border-color: #fff
+}

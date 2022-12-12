@@ -1,0 +1,156 @@
+﻿@model Writing_platform.Models.user
+
+@{
+    ViewBag.Title = "Create";
+    string at = "@";
+}
+
+<div class="h-full flex flex-col items-center justify-between pb-[5px]">
+    @using (Html.BeginForm("Create", "users", FormMethod.Post, new { id = "form-submit", enctype = "multipart/form-data" }))
+    {
+        <div class="h-1/2 self-center mt-[35px]">
+            <img class="w-20 h-20 mx-auto sm:w-28 sm:h-28 p-1 rounded-[50%] object-bottom object-cover nm-flat-zinc-800" src="~/assets/image2.jpg" />
+            <h2 class=" w-full text-center mt-3 bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  text-xs sm:text-lg font-bold ">WRITING PLATFORM</h2>
+            <div class="mb-3 flex flex-col">
+                <div class="relative">
+                    <img class="absolute top-4 left-2 w-[8px] h-[8px] fill-[#9ca3a2] " src="~/assets/icon/user.svg" />
+                    <input class="uName w-[8.6rem] sm:w-[11.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-lg" type="text" placeholder="Name" name="name" required />
+                    <p id="name" class="hidden h-0">must be 5 characters or longer</p>
+                </div>
+                <div class="relative">
+                    <img class="absolute top-4 left-2 w-[8px] h-[8px] fill-[#9ca3a2] " src="~/assets/icon/user.svg" />
+                    <input class="uEmail w-[8.6rem] sm:w-[11.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800  py-1 rounded-lg" type="text" placeholder="Email" name="email" required />
+                    <p id="email" class="hidden h-0">Invalid email format.</p>
+                </div>
+                <div class="relative">
+                    <img class="absolute top-4 left-2 w-[8px] h-[8px] " src="~/assets/icon/password.svg" />
+                    <input class="uPass w-[8.6rem] sm:w-[11.5rem] pl-6 nm-inset-zinc-800 text-[6px] caret-indigo-500 focus:outline-none border-b-[1px] border-b-transparent focus:border-b-[1px] focus:border-b-indigo-800 via-purple-800 to-pink-800 sm:text-xs bg-zinc-800 px-4 py-1 rounded-lg" type="password" placeholder="Password" name="password" required />
+                    <p id="pass" class="hidden h-0">must be 5 characters or longer</p>
+                </div>
+            </div>
+            <div class="font-semibold text-[6px] sm:text-xs text-center ">
+                <button id="btnSubmit" type="submit" class="overflow-hidden w-[8.6rem] h-[1.4rem] sm:h-[1.6rem] bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 sm:w-[11.5rem] py-[2px] nm-flat-zinc-800 rounded-xl " onclick="">
+                    <p id="btnP">Create</p>
+                    <img id="btnImg" class="animate-spin w-[1rem] h-[1rem] rounded-[50%]  sm:w-[1.2rem] sm:h-[1.2rem] mx-auto hidden h-0" src="~/assets/icon/loader.svg" />
+                </button>
+                <p class="underline decoration-[1px] w-[8.6rem] mx-auto sm:w-[11.5rem] mt-[4px]"> @Html.ActionLink("Login with existing account", "Login")</p>
+            </div>
+        </div>
+    }
+    <footer class="text-center text-[6px] sm:text-[8px]">
+        <p>&copy; @DateTime.Now.Year - Build by <span class="font-semibold sm:font-bold text-400">Leang Lyhour</span></p>
+    </footer>
+    <div id="backdrop" class="hidden h-0" onclick="closeBackdrop()"></div>
+    <div id="overlay" class="absolute w-0 h-0 hidden">
+        <p id="message" class="p-2 sm:p-4"></p>
+        <button class="errr rounded-lg text-cyan-600 px-2 sm:py-1 sm:mb-4" onclick=""></button>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+         var backdrop = $('#backdrop');
+         var overlay = $('#overlay')
+         var messsage = $('#message')
+         var btnSubmit = $("#btnSubmit");
+         var btnP = $("#btnP");
+         var btnImg = $("#btnImg");
+         var btnOverlay = $(".errr");
+
+
+         function closeBackdrop() {
+             backdrop.removeClass();
+             backdrop.addClass("hidden h-0");
+             overlay.removeClass()
+             overlay.addClass("hidden h-0")
+         }
+
+        $(function () {
+            $('#form-submit').on("submit", async function (e) {
+                e.preventDefault();
+                console.log(validateLogin())
+                if (validateLogin() === true) {
+                    btnP.text("");
+                    btnImg.removeClass('hidden h-0')
+                    setTimeout(() => {
+                        $.ajax({
+                            url: this.action,
+                            type: this.method,
+                            data: $(this).serialize(),
+                            success: function (data) {
+                                console.log(data)
+                                console.log(data.statCode)
+                                console.log(data.message)
+                                if (data.statCode === 401) {
+                                    backdrop.removeClass("hidden h-0");
+                                    backdrop.addClass("cursor-pointer z-10 absolute w-full h-full bg-black/60 backdrop-blur-[1px]");
+                                    overlay.removeClass("absolute w-0 h-0 hidden")
+                                    overlay.addClass("top-[50%] z-50 -translate-y-[50%] sm:-translate-y-[90%] absolute w-[8.6rem] h-[4.6rem] sm:w-[11.5rem] sm:h-[7.5rem] bg-zinc-800 rounded-lg text-center text-[6px] sm:text-xs flex flex-col items-center justify-around ")
+                                    messsage.html(data.message);
+                                    btnImg.addClass("hidden h-0")
+                                    btnP.text("Create");
+                                    btnOverlay.text("Okay")
+                                    btnOverlay.click(function(){closeBackdrop()})
+                                }
+                                if (data.statCode === 200) {
+                                    backdrop.removeClass("hidden h-0");
+                                    backdrop.addClass("cursor-pointer z-10 absolute w-full h-full bg-black/60 backdrop-blur-[1px]");
+                                    overlay.removeClass("absolute w-0 h-0 hidden")
+                                    overlay.addClass("top-[50%] z-50 -translate-y-[50%] sm:-translate-y-[90%] absolute w-[8.6rem] h-[4.6rem] sm:w-[11.5rem] sm:h-[7.5rem] bg-zinc-800 rounded-lg text-center text-[6px] sm:text-xs flex flex-col items-center justify-around ")
+                                    messsage.text("Account created.");
+                                    btnImg.addClass("hidden h-0")
+                                    btnP.text("Create");
+                                    btnOverlay.append("<p>Go to login</p>")
+                                    btnOverlay.click(function () { window.location.replace('https://localhost:44323/users/Login') })
+                                }
+                            }
+                        });
+                    }, [1000])
+                }
+                return;
+            })
+        });
+
+        function validateLogin() {
+            var validEmail = validateEmail();
+            var validPass = validatePass();
+            if (validEmail && validPass) {
+                return true
+            }
+            return false;
+        }
+
+        function  validateEmail()  {
+            var inputEmail = $('.uEmail').val();
+            var isvalid_email = inputEmail.includes('@at') && inputEmail.includes('.');
+             var email = $('#email');
+
+            if (isvalid_email === false ) {
+                email.removeClass();
+                email.addClass("text-red-400 text-[4px] pl-6 sm:pl-0 font-semibold sm:text-xs");
+                return false;
+            }
+            email.removeClass();
+            email.addClass("hidden h-0");
+            return true;
+        }
+
+        function validatePass() {
+            var inputPass = $('.uPass').val();
+            var isvalid_password = inputPass.length > 5;
+            var pass = $('#pass');
+
+            if (isvalid_password === false) {
+                pass.removeClass();
+                pass.addClass("text-red-400 text-[4px] pl-6 sm:pl-0 font-semibold sm:text-xs");
+                return false;
+            }
+            pass.removeClass();
+            pass.addClass("hidden h-0");
+            return true;
+        }
+
+
+    </script>
+}

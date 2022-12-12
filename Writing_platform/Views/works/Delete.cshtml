@@ -1,0 +1,64 @@
+﻿@model Writing_platform.Models.work
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>work</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.genre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.genre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dop)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dop)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.story)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.story)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.user.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.user.name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
